@@ -23,6 +23,16 @@ pipeline {
                 }
             }
         }
+        stage('Stop Docker Image') {
+                    steps {
+                        script {
+                            sh '''
+                            docker stop department-service || true
+                            docker rm department-service || true
+                            '''
+                        }
+                    }
+                }
 
         stage('Build Docker Image') {
             steps {
@@ -36,8 +46,6 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker stop department-service || true
-                    docker rm department-service || true
                     docker run -d -p 9001:9001 --name department-service $DOCKER_IMAGE
                     '''
                 }
